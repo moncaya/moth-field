@@ -210,7 +210,6 @@
     }
     target.copy.footerNote = 'This map is unfinished. Edit and update it using the "edit" button at the top.';
     target.copy.footerPrinciple = "https://mothlife.org/";
-    target.copy.identityVersion = "2027 FELLOWSHIP MAP";
   }
 
   function removeReferences(target, ids) {
