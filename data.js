@@ -20,7 +20,7 @@ window.MOTH_FIELD = {
     "pageTitle": "MOTH Living Map",
     "metaDescription": "MOTH FIELD — an unfinished, living map of relationships, ways of knowing, and ways of acting.",
     "identityTitle": "MOTH LIVING MAP",
-    "identityVersion": "2027 FELLOWSHIP MAP",
+    "identityVersion": "2027 FELLOWSHIP",
     "mapAriaLabel": "Interactive map of the MOTH field",
     "lensNavigationLabel": "Map lenses",
     "mapTitle": "MOTH WORLDS",
