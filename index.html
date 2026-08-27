@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <title></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Newsreader:opsz,wght@6..72,300;6..72,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="field-shell">
+    <header class="field-header">
+      <div class="identity editable-copy" data-edit-collection="copy" data-edit-id="identity">
+        <span class="identity-title" data-copy="identityTitle"></span>
+        <span class="identity-version" data-copy="identityVersion"></span>
+      </div>
+
+      <div class="header-actions">
+        <nav class="lens-nav"></nav>
+        <div class="global-search">
+          <button type="button" class="global-search-toggle" aria-label="Search map" aria-expanded="false" aria-controls="global-search-panel">
+            <svg aria-hidden="true" viewBox="0 0 20 20"><circle cx="8.5" cy="8.5" r="5.5"></circle><path d="M12.5 12.5 17 17"></path></svg>
+          </button>
+          <section id="global-search-panel" class="global-search-panel" role="dialog" aria-label="Search the MOTH map" hidden>
+            <div class="global-search-heading">
+              <label for="global-search-input">Search map</label>
+              <button type="button" class="global-search-clear">Clear</button>
+              <button type="button" class="global-search-close" aria-label="Close map search">×</button>
+            </div>
+            <input id="global-search-input" class="global-search-input" type="search" autocomplete="off" placeholder="Search words or phrases…">
+            <div class="global-search-results" aria-live="polite"></div>
+          </section>
+        </div>
+        <button type="button" class="edit-mode-toggle" aria-pressed="false"></button>
+      </div>
+    </header>
+
+    <section class="map-stage">
+      <svg id="field-map" role="img" aria-labelledby="map-title map-description">
+        <title id="map-title"></title>
+        <desc id="map-description"></desc>
+      </svg>
+
+      <aside class="inspector" aria-live="polite" aria-hidden="true">
+        <button type="button" class="inspector-close">×</button>
+        <button type="button" class="inspector-return-fellow" hidden></button>
+        <p class="inspector-kind"></p>
+        <h2 class="inspector-title"></h2>
+        <p class="inspector-subtitle" hidden></p>
+        <div class="inspector-description rich-text"></div>
+        <div class="inspector-long-description rich-text" hidden></div>
+        <div class="inspector-question rich-text" hidden></div>
+        <section class="inspector-references" hidden>
+          <h3>References</h3>
+          <div class="inspector-references-content rich-text"></div>
+        </section>
+        <section class="inspector-linked-concepts" hidden>
+          <h3>Linked concepts</h3>
+          <div class="inspector-linked-concepts-list"></div>
+        </section>
+        <div class="inspector-related"></div>
+      </aside>
+
+      <div class="relationship-type-popover" role="dialog" aria-label="Choose relationship type" hidden>
+        <form class="relationship-type-form">
+          <p class="relationship-type-heading">Relationship</p>
+          <p class="relationship-type-endpoints"></p>
+          <label>Type<select name="type" required></select></label>
+          <div class="relationship-type-actions">
+            <button type="button" class="relationship-type-cancel">Cancel</button>
+            <button type="submit">Save relationship</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="map-hint editable-copy" data-edit-collection="copy" data-edit-id="map-hint" aria-hidden="true" data-copy="mapHint"></div>
+      <div class="zoom-controls">
+        <button type="button" data-zoom="out">−</button>
+        <button type="button" data-zoom="reset">○</button>
+        <button type="button" data-zoom="in">+</button>
+      </div>
+
+      <div class="edit-toolbar" aria-label="Edit controls">
+        <button type="button" data-edit-action="undo">Undo</button>
+        <button type="button" data-edit-action="redo">Redo</button>
+        <button type="button" data-edit-action="export">Export JSON</button>
+        <label class="import-label">Import JSON<input type="file" data-edit-action="import" accept="application/json,.json"></label>
+        <button type="button" data-edit-action="reset">Reset to original map</button>
+        <label class="preview-lens-label">Preview
+          <select class="preview-lens"></select>
+        </label>
+        <span class="edit-status" role="status" aria-live="polite"></span>
+      </div>
+    </section>
+
+    <footer class="field-footer editable-copy" data-edit-collection="copy" data-edit-id="footer">
+      <span data-copy="footerNote"></span>
+      <a class="field-credit" data-copy="footerPrinciple" href="https://mothlife.org/" target="_blank" rel="noopener noreferrer"></a>
+    </footer>
+  </main>
+
+  <aside class="editor-shell" aria-hidden="true" aria-label="MOTH Field content editor">
+    <header class="editor-header">
+      <div>
+        <span class="editor-eyebrow">Edit mode</span>
+        <h2>Field editor</h2>
+      </div>
+      <button type="button" class="editor-close" aria-label="Exit edit mode">×</button>
+    </header>
+
+    <div class="editor-tabs" role="tablist" aria-label="Editor sections">
+      <button type="button" role="tab" aria-selected="true" data-editor-tab="item">Selected item</button>
+      <button type="button" role="tab" aria-selected="false" data-editor-tab="all">Edit all content</button>
+      <button type="button" role="tab" aria-selected="false" data-editor-tab="relationships">Relationships</button>
+    </div>
+
+    <section class="editor-pane is-active" data-editor-pane="item">
+      <div class="editor-empty">
+        <p>Select any text or shape in the field, or choose an item from Edit all content.</p>
+        <div class="editor-create-actions">
+          <button type="button" data-create="concept">Add concept</button>
+          <button type="button" data-create="question">Add question</button>
+          <button type="button" data-create="fellow">Add Fellow</button>
+        </div>
+      </div>
+      <form class="item-editor" hidden></form>
+    </section>
+
+    <section class="editor-pane" data-editor-pane="all">
+      <label class="editor-search-label" for="content-search">Search all content</label>
+      <input id="content-search" class="content-search" type="search" placeholder="Search titles, copy, tags…">
+      <div class="content-create-actions">
+        <button type="button" data-create="concept">+ Concept</button>
+        <button type="button" data-create="question">+ Question</button>
+        <button type="button" data-create="fellow">+ Fellow</button>
+      </div>
+      <div class="content-list" aria-live="polite"></div>
+    </section>
+
+    <section class="editor-pane" data-editor-pane="relationships">
+      <form class="relationship-add-form">
+        <h3>Add relationship</h3>
+        <label><span>Source</span><input type="search" name="sourceSearch" data-node-search="source" autocomplete="off" placeholder="Filter source…" aria-label="Search source options"><select name="source" required></select></label>
+        <label><span>Target</span><input type="search" name="targetSearch" data-node-search="target" autocomplete="off" placeholder="Filter target…" aria-label="Search target options"><select name="target" required></select></label>
+        <label>Type<input name="type" list="relationship-types" required></label>
+        <datalist id="relationship-types"></datalist>
+        <button type="submit">Add relationship</button>
+      </form>
+      <div class="relationship-list"></div>
+    </section>
+  </aside>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
