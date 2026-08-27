@@ -6,7 +6,7 @@
   separately for this data version.
 */
 
-window.MOTH_FIELD_VERSION = "2026-08-22-export-f290a1822563";
+window.MOTH_FIELD_VERSION = "2026-08-27-export-f1161a83dea3";
 
 window.MOTH_FIELD = {
   "relationshipGraphRevision": "2026-08-23-relational-field-v1",
@@ -16,11 +16,11 @@ window.MOTH_FIELD = {
   },
   "copy": {
     "id": "map-copy",
-    "label": "Interface and map copy",
-    "pageTitle": "MOTH FIELD — A Living Map",
+    "label": "",
+    "pageTitle": "MOTH Living Map",
     "metaDescription": "MOTH FIELD — an unfinished, living map of relationships, ways of knowing, and ways of acting.",
-    "identityTitle": "MOTH WORLDS",
-    "identityVersion": "2027 FELLOWSHIP MAP",
+    "identityTitle": "MOTH LIVING MAP",
+    "identityVersion": "2027 FELLOWSHIP",
     "mapAriaLabel": "Interactive map of the MOTH field",
     "lensNavigationLabel": "Map lenses",
     "mapTitle": "MOTH WORLDS",
@@ -1643,7 +1643,7 @@ window.MOTH_FIELD = {
       "y1": 924,
       "x2": 1024,
       "y2": 655,
-      "description": "The self is understood through the relations that sustain and exceed it.",
+      "description": "<p>Self only exists in relation to the other.</p>",
       "relatedConcepts": [
         "kinship",
         "interdependence"
@@ -1683,7 +1683,7 @@ window.MOTH_FIELD = {
       "y1": 420,
       "x2": 1242,
       "y2": 469,
-      "description": "Attention shifts from mastery toward receptivity and relation.",
+      "description": "<p>Attention opens up into receptivity and interconnectedness.</p>",
       "relatedConcepts": [
         "deep-listening",
         "silence"
@@ -1703,7 +1703,7 @@ window.MOTH_FIELD = {
       "y1": 207,
       "x2": 734,
       "y2": 271,
-      "description": "Sensitivity grows by attending to signals that urgency and certainty drown out.",
+      "description": "<p>The truest voice is seldom the loudest.&nbsp;</p>",
       "relatedConcepts": [
         "faint",
         "silence",
@@ -1724,7 +1724,7 @@ window.MOTH_FIELD = {
       "y1": 235,
       "x2": 875,
       "y2": 260,
-      "description": "Not abandoning rigour, but allowing the unknown to remain active.",
+      "description": "<p>In practicing impermanence, I accept some questions need no answer.</p>",
       "relatedConcepts": [
         "uncertainty",
         "mystery",
@@ -1745,7 +1745,7 @@ window.MOTH_FIELD = {
       "y1": 650,
       "x2": 1398,
       "y2": 750,
-      "description": "People and practices exceed a single disciplinary identity.",
+      "description": "<p>Fellows and their work exceed a single disciplinary identity.</p>",
       "relatedConcepts": [
         "interdisciplinarity",
         "plurality"
@@ -1764,7 +1764,7 @@ window.MOTH_FIELD = {
       "y1": 592,
       "x2": 1440,
       "y2": 554,
-      "description": "Ideas retain form while remaining open to challenge, feedback and change.",
+      "description": "<p>Ideas can both be sharp and inherently open to challenge, feedback and change.</p>",
       "relatedConcepts": [
         "porosity"
       ],
@@ -1782,7 +1782,7 @@ window.MOTH_FIELD = {
       "y1": 241,
       "x2": 1542,
       "y2": 394,
-      "description": "Knowing is redistributed across senses, movement, touch and presence.",
+      "description": "<p>Knowing is redistributed across senses, movement, touch and embodied presence.</p>",
       "relatedConcepts": [
         "body"
       ],
@@ -1800,7 +1800,7 @@ window.MOTH_FIELD = {
       "y1": 500,
       "x2": 1080,
       "y2": 540,
-      "description": "The human is repositioned as participant within a wider living field.",
+      "description": "<p>The human is repositioned as participant within a wider living field - not at its center,&nbsp;</p>",
       "relatedConcepts": [
         "more-than-human",
         "kinship",
@@ -1820,7 +1820,7 @@ window.MOTH_FIELD = {
       "y1": 864,
       "x2": 600,
       "y2": 650,
-      "description": "Transformation can also work through attraction, imagination and relationship.",
+      "description": "<p>Every challenge is an invitation to see further.</p>",
       "relatedConcepts": [
         "soft-flip",
         "invitation",
@@ -1840,7 +1840,7 @@ window.MOTH_FIELD = {
       "y1": 995,
       "x2": 1067,
       "y2": 814,
-      "description": "Taking gives way to mutual obligation within living relationships.",
+      "description": "<p>Living is never a one-way road. Giving and receiving creates the basis of our existence.</p>",
       "relatedConcepts": [
         "reciprocity",
         "care",
@@ -1861,7 +1861,7 @@ window.MOTH_FIELD = {
       "y1": 405,
       "x2": 350,
       "y2": 560,
-      "description": "Worldviews become attention, relationships, rehearsals and interventions.",
+      "description": "<p>A good idea is only good if we can make it real.</p>",
       "relatedConcepts": [
         "living-practice",
         "practice"
@@ -1880,7 +1880,7 @@ window.MOTH_FIELD = {
       "y1": 445,
       "x2": 455,
       "y2": 430,
-      "description": "Fixed deliverables loosen into conditions from which something can arise.",
+      "description": "<p>Fixed deliverables loosen into conditions from which something new can emerge.</p>",
       "relatedConcepts": [
         "emergence"
       ],
@@ -1899,7 +1899,7 @@ window.MOTH_FIELD = {
       "y1": 901,
       "x2": 1177,
       "y2": 679,
-      "description": "Authorship expands into community, lineage and shared making.",
+      "description": "<p>Authorship is no longer relevant - community and shared making is.</p>",
       "relatedConcepts": [
         "community",
         "making",
@@ -1919,7 +1919,7 @@ window.MOTH_FIELD = {
       "y1": 898,
       "x2": 733,
       "y2": 626,
-      "description": "Challenge is not merely absorbed; it is allowed to redraw the field.",
+      "description": "<p>Post-resistance is a world of creativity and imagination.</p>",
       "relatedConcepts": [
         "porosity"
       ],
