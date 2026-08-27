@@ -6,7 +6,7 @@
   separately for this data version.
 */
 
-window.MOTH_FIELD_VERSION = "2026-08-27-export-f1161a83dea3";
+window.MOTH_FIELD_VERSION = "2026-08-27-export-f1161a83dea3-subtitle-fix";
 
 window.MOTH_FIELD = {
   "relationshipGraphRevision": "2026-08-23-relational-field-v1",
