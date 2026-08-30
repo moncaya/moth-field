@@ -21,6 +21,8 @@
     linkedConceptFocusId: null,
     connectionDraft: null,
     pendingConnection: null,
+    editMoveReadyId: null,
+    inspectorExpanded: false,
     savedSnapshot: JSON.stringify(data),
     saveState: "saved"
   };
@@ -34,6 +36,7 @@
   const editorShell = document.querySelector(".editor-shell");
   const itemEditor = document.querySelector(".item-editor");
   const editorEmpty = document.querySelector(".editor-empty");
+  const mobileLayoutQuery = window.matchMedia("(max-width: 900px), (max-height: 520px) and (max-width: 950px)");
 
   if (!window.d3 || !data.canvas) {
     document.querySelector(".map-stage").innerHTML = `<p class="load-error">${escapeHtml(data.copy?.loadError || "Map unavailable")}</p>`;
@@ -242,6 +245,7 @@
     document.querySelector(".edit-mode-toggle").addEventListener("click", () => toggleEditMode());
     document.querySelector(".editor-close").addEventListener("click", () => toggleEditMode(false));
     document.querySelector(".inspector-close").addEventListener("click", closeInspector);
+    document.querySelector(".inspector-sheet-toggle").addEventListener("click", toggleInspectorSheet);
     document.querySelector(".inspector-return-fellow").addEventListener("click", returnToFocusedFellow);
     document.querySelector(".relationship-type-form").addEventListener("submit", savePendingRelationship);
     document.querySelector(".relationship-type-cancel").addEventListener("click", closeRelationshipTypeChooser);
@@ -258,6 +262,9 @@
     document.querySelector(".relationship-add-form").addEventListener("submit", addRelationshipFromForm);
     document.querySelectorAll(".relationship-add-form [data-node-search]").forEach(input => input.addEventListener("input", () => updateRelationshipNodeOptions(input.dataset.nodeSearch)));
     document.querySelector(".preview-lens").addEventListener("change", event => setLens(event.target.value));
+    document.querySelector(".territory-navigator select").addEventListener("change", selectTerritoryFromNavigator);
+    document.querySelector(".mobile-edit-toolbar-toggle").addEventListener("click", toggleMobileEditToolbar);
+    document.querySelector(".editor-sheet-toggle").addEventListener("click", toggleEditorSheet);
 
     document.querySelector(".global-search-toggle").addEventListener("click", toggleGlobalSearch);
     document.querySelector(".global-search-close").addEventListener("click", () => toggleGlobalSearch(false));
@@ -300,24 +307,57 @@
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState === "hidden") flushAutoSave();
     });
+    window.addEventListener("resize", handleViewportChange);
   }
 
   function setupZoom() {
     zoom = d3.zoom()
-      .scaleExtent([0.65, 2.5])
+      .scaleExtent(zoomScaleExtent())
       .filter(event => {
+        if (event.touches?.length > 1) return true;
         if (state.editMode && event.target.closest?.(".editable-object")) return false;
         return !event.target.closest?.(".concept, .territory-hit, .movement, .question-node, .fellow, .threshold, .moth-centre");
       })
       .on("zoom", event => {
         state.zoomTransform = event.transform;
-        if (root) root.attr("transform", event.transform);
+        if (root) {
+          root.attr("transform", event.transform);
+          applySemanticZoom(event.transform.k);
+        }
       });
     svg.call(zoom).on("dblclick.zoom", null);
     svg.on("mousedown.track touchstart.track wheel.track", () => { state.userMoved = true; });
     svg.on("click", event => {
       if (!state.editMode && !event.target.closest?.(".concept, .territory-hit, .movement, .question-node, .fellow, .threshold, .moth-centre")) closeInspector();
     });
+  }
+
+  function isMobileLayout() {
+    return mobileLayoutQuery.matches;
+  }
+
+  function zoomScaleExtent() {
+    return isMobileLayout() ? [0.72, 7.5] : [0.65, 2.5];
+  }
+
+  function applySemanticZoom(scale = state.zoomTransform.k || 1) {
+    if (!root) return;
+    const level = !isMobileLayout() || scale >= 3.2 ? "detail" : scale >= 1.65 ? "middle" : "overview";
+    root
+      .classed("semantic-overview", level === "overview")
+      .classed("semantic-middle", level === "middle")
+      .classed("semantic-detail", level === "detail");
+  }
+
+  function handleViewportChange() {
+    window.clearTimeout(handleViewportChange.timer);
+    handleViewportChange.timer = window.setTimeout(() => {
+      zoom.scaleExtent(zoomScaleExtent());
+      document.querySelector(".inspector")?.classList.remove("is-expanded");
+      document.querySelector(".editor-shell")?.classList.remove("is-expanded");
+      applySemanticZoom();
+      if (!state.userMoved) fitInitial();
+    }, 120);
   }
 
   function renderAll(refreshEditor = true) {
@@ -365,6 +405,49 @@
 
     const preview = document.querySelector(".preview-lens");
     preview.innerHTML = data.lenses.map(lens => `<option value="${escapeAttr(lens.key)}"${lens.key === state.lens ? " selected" : ""}>${escapeHtml(lens.label)}</option>`).join("");
+
+    const territorySelect = document.querySelector(".territory-navigator select");
+    const selectedTerritory = territorySelect.value;
+    territorySelect.innerHTML = `<option value="">Territories…</option>${data.territories.map(territory => `<option value="${escapeAttr(territory.id)}">${escapeHtml(territory.label)}</option>`).join("")}`;
+    if (data.territories.some(territory => territory.id === selectedTerritory)) territorySelect.value = selectedTerritory;
+  }
+
+  function selectTerritoryFromNavigator(event) {
+    const territory = data.territories.find(item => item.id === event.target.value);
+    if (!territory) return;
+    if (state.editMode) {
+      openEditor("territories", territory.id);
+      return;
+    }
+    if (state.lens !== "field") setLens("field");
+    selectPublicItem(territory, "territory");
+    focusMapItem(territory, 2.15);
+  }
+
+  function toggleMobileEditToolbar() {
+    const toolbar = document.querySelector(".edit-toolbar");
+    const toggle = document.querySelector(".mobile-edit-toolbar-toggle");
+    const open = !toolbar.classList.contains("is-mobile-open");
+    toolbar.classList.toggle("is-mobile-open", open);
+    toggle.setAttribute("aria-expanded", String(open));
+  }
+
+  function toggleInspectorSheet() {
+    const panel = document.querySelector(".inspector");
+    state.inspectorExpanded = !panel.classList.contains("is-expanded");
+    panel.classList.toggle("is-expanded", state.inspectorExpanded);
+    const toggle = panel.querySelector(".inspector-sheet-toggle");
+    toggle.setAttribute("aria-expanded", String(state.inspectorExpanded));
+    toggle.setAttribute("aria-label", state.inspectorExpanded ? "Collapse details" : "Expand details");
+  }
+
+  function toggleEditorSheet() {
+    const expanded = !editorShell.classList.contains("is-expanded");
+    editorShell.classList.toggle("is-expanded", expanded);
+    const toggle = document.querySelector(".editor-sheet-toggle");
+    toggle.setAttribute("aria-expanded", String(expanded));
+    toggle.textContent = expanded ? "Collapse" : "Expand";
+    toggle.setAttribute("aria-label", expanded ? "Collapse field editor" : "Expand field editor");
   }
 
   function toggleGlobalSearch(force) {
@@ -415,6 +498,7 @@
       ["concepts", data.concepts],
       ["thresholds", data.thresholds],
       ["movements", data.movements],
+      ["questions", data.questions],
       ["fellows", data.fellows]
     ];
     groups.forEach(([collection, items]) => items.forEach(item => {
@@ -457,7 +541,7 @@
   }
 
   function searchKind(collection) {
-    return ({ centre: "Centre", territories: "Territory", concepts: "Concept", thresholds: "Annotation", movements: "Movement", fellows: "Fellow" })[collection] || humanize(collection);
+    return ({ centre: "Centre", territories: "Territory", concepts: "Concept", thresholds: "Annotation", movements: "Movement", questions: "Question", fellows: "Fellow" })[collection] || humanize(collection);
   }
 
   function relationshipLabel(item, byId = itemMap()) {
@@ -470,7 +554,7 @@
     const byId = itemMap();
     let item = collection === "relationships" ? data.relationships.find(entry => entry.id === id) : getItem(collection, id);
     if (!item) return;
-    const lens = collection === "movements" ? "movements" : collection === "fellows" ? "fellows" : "field";
+    const lens = collection === "movements" ? "movements" : collection === "questions" ? "questions" : collection === "fellows" ? "fellows" : "field";
     setLens(lens);
 
     let publicItem = item;
@@ -495,12 +579,13 @@
     toggleGlobalSearch(false);
   }
 
-  function focusMapItem(item) {
+  function focusMapItem(item, requestedScale) {
     const positioned = positionedItem(item);
     if (!hasPosition(positioned)) return;
-    const scale = 1.35;
+    const scale = requestedScale || (isMobileLayout() ? 3.8 : 1.35);
     const x = data.canvas.width / 2 - Number(positioned.x) * scale;
-    const y = data.canvas.height / 2 - Number(positioned.y) * scale;
+    const targetY = isMobileLayout() ? data.canvas.height * 0.38 : data.canvas.height / 2;
+    const y = targetY - Number(positioned.y) * scale;
     state.userMoved = true;
     svg.transition().duration(520).call(zoom.transform, d3.zoomIdentity.translate(x, y).scale(scale));
   }
@@ -607,7 +692,7 @@
     const territories = territoryLayer.selectAll("g.territory")
       .data(data.territories, d => d.id)
       .join("g")
-      .attr("class", `territory editable-object${state.editMode ? " is-editable" : ""}`)
+      .attr("class", d => `territory editable-object${state.editMode ? " is-editable" : ""}${state.editMoveReadyId === d.id ? " is-edit-move-ready" : ""}`)
       .attr("data-id", d => d.id)
       .attr("data-collection", "territories")
       .attr("transform", d => territoryTransform(d));
@@ -664,24 +749,29 @@
     const thresholds = thresholdLayer.selectAll("g.threshold")
       .data(data.thresholds, d => d.id)
       .join("g")
-      .attr("class", `threshold editable-object${state.editMode ? " is-editable" : ""}`)
+      .attr("class", d => `threshold editable-object${state.editMode ? " is-editable" : ""}${state.editMoveReadyId === d.id ? " is-edit-move-ready" : ""}`)
       .attr("data-id", d => d.id)
       .attr("transform", d => `translate(${d.x},${d.y})`)
       .on("click", (event, d) => handleObjectClick(event, "thresholds", d, "annotation"));
+    thresholds.append("circle").attr("class", "map-touch-target").attr("r", 30);
     thresholds.append("line").attr("class", "threshold-mark").attr("x1", -13).attr("x2", -4);
     thresholds.append("text").attr("class", "threshold-label").attr("x", 1).attr("dy", "0.32em").text(d => d.label);
 
     const concepts = conceptLayer.selectAll("g.concept")
       .data(data.concepts, d => d.id)
       .join("g")
-      .attr("class", d => `concept editable-object${d.priority >= 3 ? " is-detail" : ""}${state.editMode ? " is-editable" : ""}${focusedFellow ? (linkedConceptIds.has(d.id) ? " is-fellow-linked" : " is-fellow-unrelated") : ""}${state.linkedConceptFocusId === d.id ? " is-fellow-focus" : ""}`)
+      .attr("class", d => `concept editable-object${d.priority >= 3 ? " is-detail" : ""}${state.editMode ? " is-editable" : ""}${state.editMoveReadyId === d.id ? " is-edit-move-ready" : ""}${focusedFellow ? (linkedConceptIds.has(d.id) ? " is-fellow-linked" : " is-fellow-unrelated") : ""}${state.linkedConceptFocusId === d.id ? " is-fellow-focus" : ""}`)
       .attr("data-id", d => d.id)
       .attr("data-type", d => d.type)
+      .attr("data-priority", d => Math.max(1, Math.min(3, Number(d.priority) || 1)))
+      .attr("data-weight", d => Number(d.weight) || 1)
+      .attr("data-overview", d => String((Number(d.priority) || 1) === 1 && (Number(d.weight) || 1) >= 1.08))
       .style("--weight", d => d.weight || 1)
       .attr("transform", d => `translate(${d.x},${d.y})`)
       .on("mouseenter", (_, d) => { if (!state.editMode) highlightRelated(d); })
       .on("mouseleave", () => { if (!state.editMode && !state.selected) clearMapHighlight(); })
       .on("click", (event, d) => handleObjectClick(event, "concepts", d, d.type || "concept"));
+    concepts.append("circle").attr("class", "map-touch-target").attr("r", 30);
     concepts.append("line").attr("class", "concept-stem").attr("x1", -8).attr("x2", -2);
     concepts.append("circle").attr("class", "concept-dot").attr("r", d => 1.25 + (d.weight || 1) * 0.55);
     concepts.append("text").attr("class", "concept-label").attr("x", 7).attr("dy", "0.34em").text(d => d.label);
@@ -692,7 +782,7 @@
     if (centralItem) {
       centre = centreLayer.append("g")
         .datum(centralItem)
-        .attr("class", `moth-centre editable-object${state.editMode ? " is-editable" : ""}`)
+        .attr("class", `moth-centre editable-object${state.editMode ? " is-editable" : ""}${state.editMoveReadyId === centralItem.id ? " is-edit-move-ready" : ""}`)
         .attr("data-id", centralItem.id)
         .attr("data-collection", centralCollection)
         .style("--weight", centralItem.weight || 1)
@@ -709,8 +799,9 @@
     const movements = movementLayer.selectAll("g.movement")
       .data(data.movements, d => d.id)
       .join("g")
-      .attr("class", `movement editable-object${state.editMode ? " is-editable" : ""}`)
+      .attr("class", d => `movement editable-object${state.editMode ? " is-editable" : ""}${state.editMoveReadyId === d.id ? " is-edit-move-ready" : ""}`)
       .attr("data-id", d => d.id)
+      .attr("data-weight", d => Number(d.weight) || 1)
       .style("--weight", d => d.weight || 1)
       .on("mouseenter", (_, d) => { if (!state.editMode) highlightRelated(d); })
       .on("mouseleave", () => { if (!state.editMode && !state.selected) clearMapHighlight(); })
@@ -718,6 +809,8 @@
         handleObjectClick(event, "movements", d, "movement");
         if (!state.editMode) animateMovement(d, event.currentTarget);
       });
+    movements.append("path").attr("class", "movement-touch-target")
+      .attr("d", d => curvedPath({ x: d.x1, y: d.y1 }, { x: d.x2, y: d.y2 }, 0.1));
     movements.append("path").attr("class", "movement-path").attr("marker-end", "url(#movement-arrow)")
       .attr("d", d => curvedPath({ x: d.x1, y: d.y1 }, { x: d.x2, y: d.y2 }, 0.1));
     movements.append("text").attr("class", "movement-from").attr("x", d => d.x1).attr("y", d => d.y1 - 10).text(d => d.from);
@@ -726,13 +819,15 @@
     const questions = questionLayer.selectAll("g.question-node")
       .data(data.questions, d => d.id)
       .join("g")
-      .attr("class", `question-node editable-object${state.editMode ? " is-editable" : ""}`)
+      .attr("class", d => `question-node editable-object${state.editMode ? " is-editable" : ""}${state.editMoveReadyId === d.id ? " is-edit-move-ready" : ""}`)
       .attr("data-id", d => d.id)
+      .attr("data-weight", d => Number(d.weight) || 1)
       .style("--weight", d => d.weight || 1)
       .attr("transform", d => `translate(${d.x},${d.y})`)
       .on("mouseenter", (_, d) => { if (!state.editMode) highlightRelated(d); })
       .on("mouseleave", () => { if (!state.editMode && !state.selected) clearMapHighlight(); })
       .on("click", (event, d) => handleObjectClick(event, "questions", d, "question"));
+    questions.append("circle").attr("class", "map-touch-target").attr("r", 30);
     questions.append("circle").attr("class", "question-mark").attr("r", 9);
     questions.append("text").attr("class", "question-text").attr("x", 17).attr("dy", "0.33em").each(function (d) {
       wrapSvgText(d3.select(this), d.text || d.label || "", d.weight > 1 ? 310 : 270, 17, 18, "start");
@@ -741,14 +836,16 @@
     const fellows = fellowLayer.selectAll("g.fellow")
       .data(data.fellows, d => d.id)
       .join("g")
-      .attr("class", d => `fellow editable-object${state.editMode ? " is-editable" : ""}${focusedFellow ? (d.id === focusedFellow.id ? " is-fellow-focus" : " is-fellow-unrelated") : ""}`)
+      .attr("class", d => `fellow editable-object${state.editMode ? " is-editable" : ""}${state.editMoveReadyId === d.id ? " is-edit-move-ready" : ""}${focusedFellow ? (d.id === focusedFellow.id ? " is-fellow-focus" : " is-fellow-unrelated") : ""}`)
       .attr("data-id", d => d.id)
+      .attr("data-weight", d => Number(d.weight) || 1)
       .attr("transform", d => `translate(${d.x},${d.y})`)
       .on("mouseenter", (_, d) => { if (!state.editMode) highlightRelated(d); })
       .on("mouseleave", () => { if (!state.editMode && !state.selected) clearMapHighlight(); })
       .on("click", (event, d) => handleObjectClick(event, "fellows", d, "fellow"));
     fellows.each(function (d) {
       const group = d3.select(this);
+      group.append("circle").attr("class", "map-touch-target").attr("r", 30);
       const angles = (d.territories || []).map((_, index) => (Math.PI * 2 * index) / Math.max(3, d.territories.length) - Math.PI / 2);
       group.selectAll("line").data(angles).join("line").attr("class", "fellow-ray").attr("x2", angle => Math.cos(angle) * 30).attr("y2", angle => Math.sin(angle) * 30);
       group.append("circle").attr("class", "fellow-core").attr("r", 8 * (d.weight || 1));
@@ -774,6 +871,7 @@
     if (state.lens === "movements") movementLayer.raise();
     if (state.lens === "questions") questionLayer.raise();
     if (state.lens === "fellows") fellowLayer.raise();
+    applySemanticZoom();
   }
 
   function css(name) {
@@ -848,6 +946,7 @@
 
   function attachDrag(selection, collection, transform, onMove) {
     selection.call(d3.drag()
+      .filter((event, item) => !isMobileLayout() || state.editMoveReadyId === item.id)
       .subject((_, item) => ({ x: Number(item.x) || 0, y: Number(item.y) || 0 }))
       .on("start", event => {
         event.sourceEvent.stopPropagation();
@@ -1033,7 +1132,13 @@
 
   function handleObjectClick(event, collection, item, kind) {
     event.stopPropagation();
-    if (state.editMode) openEditor(collection, item.id);
+    if (state.editMode) {
+      openEditor(collection, item.id);
+      if (isMobileLayout() && state.editMoveReadyId !== item.id) {
+        state.editMoveReadyId = item.id;
+        drawMap();
+      }
+    }
     else selectPublicItem(item, kind);
   }
 
@@ -1082,6 +1187,11 @@
     returnButton.hidden = !focusedFellow || isFellow;
     returnButton.textContent = focusedFellow && !isFellow ? `← Back to ${focusedFellow.name}` : "";
     const panel = document.querySelector(".inspector");
+    state.inspectorExpanded = false;
+    panel.classList.remove("is-expanded");
+    const sheetToggle = panel.querySelector(".inspector-sheet-toggle");
+    sheetToggle.setAttribute("aria-expanded", "false");
+    sheetToggle.setAttribute("aria-label", "Expand details");
     panel.classList.add("is-open");
     panel.setAttribute("aria-hidden", "false");
     if (isFellow) highlightRelated(item);
@@ -1134,7 +1244,11 @@
     state.fellowFocusId = null;
     state.linkedConceptFocusId = null;
     const panel = document.querySelector(".inspector");
-    panel.classList.remove("is-open");
+    state.inspectorExpanded = false;
+    panel.classList.remove("is-open", "is-expanded");
+    const sheetToggle = panel.querySelector(".inspector-sheet-toggle");
+    sheetToggle.setAttribute("aria-expanded", "false");
+    sheetToggle.setAttribute("aria-label", "Expand details");
     panel.setAttribute("aria-hidden", "true");
     clearMapHighlight();
     if (hadFellowFocus && state.lens === "fellows" && options.redraw !== false) drawMap();
@@ -1191,7 +1305,7 @@
   }
 
   function fitInitial() {
-    const scale = 0.93;
+    const scale = isMobileLayout() ? 1.04 : 0.93;
     const W = data.canvas.width;
     const H = data.canvas.height;
     state.userMoved = false;
@@ -1201,16 +1315,23 @@
   function returnToTerritoryOverview() {
     if (state.lens !== "field") setLens("field");
     else closeInspector();
+    document.querySelector(".territory-navigator select").value = "";
     fitInitial();
   }
 
   function toggleEditMode(force) {
     state.editMode = typeof force === "boolean" ? force : !state.editMode;
+    state.editMoveReadyId = null;
     document.body.classList.toggle("edit-mode", state.editMode);
     editorShell.setAttribute("aria-hidden", String(!state.editMode));
     closeRelationshipTypeChooser();
     if (state.editMode) closeInspector({ redraw: false });
-    else closeItemEditor();
+    else {
+      closeItemEditor();
+      editorShell.classList.remove("is-expanded");
+      document.querySelector(".edit-toolbar").classList.remove("is-mobile-open");
+      document.querySelector(".mobile-edit-toolbar-toggle").setAttribute("aria-expanded", "false");
+    }
     renderPublicCopy();
     drawMap();
   }
