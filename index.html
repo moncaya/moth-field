@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="">
   <title></title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -45,6 +45,9 @@
       </svg>
 
       <aside class="inspector" aria-live="polite" aria-hidden="true">
+        <button type="button" class="inspector-sheet-toggle" aria-label="Expand details" aria-expanded="false">
+          <span aria-hidden="true"></span>
+        </button>
         <button type="button" class="inspector-close">×</button>
         <button type="button" class="inspector-return-fellow" hidden></button>
         <p class="inspector-kind"></p>
@@ -77,13 +80,20 @@
       </div>
 
       <div class="map-hint editable-copy" data-edit-collection="copy" data-edit-id="map-hint" aria-hidden="true" data-copy="mapHint"></div>
+      <label class="territory-navigator">
+        <span>Explore a territory</span>
+        <select aria-label="Explore a territory">
+          <option value="">Territories…</option>
+        </select>
+      </label>
       <div class="zoom-controls">
         <button type="button" data-zoom="out">−</button>
         <button type="button" data-zoom="reset">○</button>
         <button type="button" data-zoom="in">+</button>
       </div>
 
-      <div class="edit-toolbar" aria-label="Edit controls">
+      <button type="button" class="mobile-edit-toolbar-toggle" aria-expanded="false" aria-controls="mobile-edit-toolbar">Edit actions</button>
+      <div id="mobile-edit-toolbar" class="edit-toolbar" aria-label="Edit controls">
         <button type="button" data-edit-action="undo">Undo</button>
         <button type="button" data-edit-action="redo">Redo</button>
         <button type="button" data-edit-action="export">Export JSON</button>
@@ -108,6 +118,8 @@
         <span class="editor-eyebrow">Edit mode</span>
         <h2>Field editor</h2>
       </div>
+      <p class="mobile-edit-help">Tap an object to select it, then drag it to move. Drag the empty field to pan.</p>
+      <button type="button" class="editor-sheet-toggle" aria-label="Expand field editor" aria-expanded="false">Expand</button>
       <button type="button" class="editor-close" aria-label="Exit edit mode">×</button>
     </header>
 
