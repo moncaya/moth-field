@@ -6,7 +6,7 @@
   separately for this data version.
 */
 
-window.MOTH_FIELD_VERSION = "2026-08-27-export-f1161a83dea3-subtitle-fix";
+window.MOTH_FIELD_VERSION = "2026-08-30-export-c19992a34c1b";
 
 window.MOTH_FIELD = {
   "relationshipGraphRevision": "2026-08-23-relational-field-v1",
@@ -20,7 +20,7 @@ window.MOTH_FIELD = {
     "pageTitle": "MOTH Living Map",
     "metaDescription": "MOTH FIELD — an unfinished, living map of relationships, ways of knowing, and ways of acting.",
     "identityTitle": "MOTH LIVING MAP",
-    "identityVersion": "2027 FELLOWSHIP",
+    "identityVersion": "2027 FELLOWSHIP MAP",
     "mapAriaLabel": "Interactive map of the MOTH field",
     "lensNavigationLabel": "Map lenses",
     "mapTitle": "MOTH WORLDS",
@@ -82,8 +82,8 @@ window.MOTH_FIELD = {
       "label": "Animate Earth",
       "rootLabel": "",
       "rootNote": "<p><br></p>",
-      "x": 975,
-      "y": 500,
+      "x": 999,
+      "y": 505,
       "weight": 1.35,
       "radiusX": 330,
       "radiusY": 230,
@@ -122,8 +122,8 @@ window.MOTH_FIELD = {
     {
       "id": "the-liminal",
       "label": "The Liminal",
-      "x": 1163,
-      "y": 143,
+      "x": 1168,
+      "y": 138,
       "weight": 0.98,
       "radiusX": 280,
       "radiusY": 185,
@@ -718,8 +718,8 @@ window.MOTH_FIELD = {
         "plural-worlds",
         "animate-earth"
       ],
-      "x": 1346,
-      "y": 660,
+      "x": 1405,
+      "y": 719,
       "weight": 0.9,
       "priority": 1,
       "related": [
@@ -1218,8 +1218,8 @@ window.MOTH_FIELD = {
         "grounded-in-reality",
         "relationality"
       ],
-      "x": 728,
-      "y": 503,
+      "x": 570,
+      "y": 487,
       "weight": 0.9,
       "priority": 2,
       "related": [
@@ -1934,9 +1934,9 @@ window.MOTH_FIELD = {
   "questions": [
     {
       "id": "q-alive",
-      "text": "What is alive?",
-      "x": 820,
-      "y": 470,
+      "text": "How can we best inhabit an animate Earth?",
+      "x": 612,
+      "y": 536,
       "weight": 1.35,
       "territories": [
         "animate-earth"
@@ -1951,9 +1951,9 @@ window.MOTH_FIELD = {
     },
     {
       "id": "q-agency",
-      "text": "Who has agency?",
-      "x": 1000,
-      "y": 530,
+      "text": "What changes when humans are not the only ones who have agency?",
+      "x": 795,
+      "y": 401,
       "weight": 0.92,
       "territories": [
         "animate-earth",
@@ -1968,7 +1968,7 @@ window.MOTH_FIELD = {
     },
     {
       "id": "q-hearing",
-      "text": "What aren’t we hearing?",
+      "text": "How to practice listening as an ecological practice?",
       "x": 1350,
       "y": 340,
       "weight": 1.15,
@@ -1988,7 +1988,7 @@ window.MOTH_FIELD = {
       "id": "q-visible",
       "text": "What exists beyond the visible?",
       "x": 470,
-      "y": 180,
+      "y": 199,
       "weight": 0.92,
       "territories": [
         "invisible-landscapes",
@@ -2005,8 +2005,8 @@ window.MOTH_FIELD = {
     {
       "id": "q-edge",
       "text": "What becomes visible at the edge of what we know?",
-      "x": 980,
-      "y": 180,
+      "x": 1058,
+      "y": 110,
       "weight": 1.05,
       "territories": [
         "the-liminal"
@@ -2021,9 +2021,9 @@ window.MOTH_FIELD = {
     },
     {
       "id": "q-worlds",
-      "text": "How do different worlds meet without one consuming the other?",
-      "x": 1420,
-      "y": 640,
+      "text": "How do different voices meet, listen and learn from each other?",
+      "x": 1406,
+      "y": 720,
       "weight": 1.02,
       "territories": [
         "plural-worlds"
@@ -2037,9 +2037,9 @@ window.MOTH_FIELD = {
     },
     {
       "id": "q-relation",
-      "text": "What changes when relationship becomes the unit of attention?",
-      "x": 870,
-      "y": 760,
+      "text": "What changes when reciprocity becomes the unit of attention?",
+      "x": 1036,
+      "y": 789,
       "weight": 1.08,
       "territories": [
         "relationality"
@@ -2068,7 +2068,7 @@ window.MOTH_FIELD = {
     },
     {
       "id": "q-knowing",
-      "text": "What becomes knowable when we stop trying so hard to know?",
+      "text": "What becomes knowable when we stop trying to chase answers?",
       "x": 650,
       "y": 280,
       "weight": 0.9,
@@ -2085,9 +2085,9 @@ window.MOTH_FIELD = {
     },
     {
       "id": "q-reciprocity",
-      "text": "What does reciprocity require?",
-      "x": 1100,
-      "y": 840,
+      "text": "How are relationship, reciprocity and responsibility related?",
+      "x": 827,
+      "y": 891,
       "weight": 0.86,
       "territories": [
         "relationality",
@@ -2103,9 +2103,9 @@ window.MOTH_FIELD = {
     },
     {
       "id": "q-invitation",
-      "text": "How can transformation happen through invitation, imagination and relationship — not only opposition?",
-      "x": 450,
-      "y": 680,
+      "text": "How might we ignite change through openness rather than resistance?",
+      "x": 523,
+      "y": 733,
       "weight": 0.82,
       "territories": [
         "soft-flip-territory"
@@ -2121,8 +2121,8 @@ window.MOTH_FIELD = {
     {
       "id": "q-practice",
       "text": "How do we practise the world we say we believe in?",
-      "x": 150,
-      "y": 470,
+      "x": 276,
+      "y": 497,
       "weight": 0.92,
       "territories": [
         "grounded-in-reality",
@@ -2137,8 +2137,8 @@ window.MOTH_FIELD = {
     },
     {
       "id": "q-participate",
-      "text": "How do humans participate in a world that is already alive?",
-      "x": 900,
+      "text": "How may humans communicate with more-than-human life?",
+      "x": 967,
       "y": 600,
       "weight": 0.88,
       "territories": [
@@ -2152,6 +2152,132 @@ window.MOTH_FIELD = {
       ],
       "manualPosition": true,
       "references": ""
+    },
+    {
+      "id": "new-question-14",
+      "label": "",
+      "text": "What does it mean to belong to a territory that is itself alive?",
+      "subtitle": "",
+      "shortDescription": "",
+      "description": "",
+      "longDescription": "",
+      "references": "",
+      "keywords": [],
+      "terms": [],
+      "tags": [],
+      "attribution": "",
+      "sourceText": "",
+      "territories": [],
+      "related": [],
+      "x": 1021,
+      "y": 460,
+      "weight": 1,
+      "manualPosition": true
+    },
+    {
+      "id": "new-question-15",
+      "label": "",
+      "text": "How do we translate between worlds without reducing what makes them different?",
+      "subtitle": "",
+      "shortDescription": "",
+      "description": "",
+      "longDescription": "",
+      "references": "",
+      "keywords": [],
+      "terms": [],
+      "tags": [],
+      "attribution": "",
+      "sourceText": "",
+      "territories": [],
+      "related": [],
+      "x": 1344,
+      "y": 620,
+      "weight": 1,
+      "manualPosition": true
+    },
+    {
+      "id": "new-question-16",
+      "label": "",
+      "text": "What does activism look like when it doesn’t look like activism?",
+      "subtitle": "",
+      "shortDescription": "",
+      "description": "",
+      "longDescription": "",
+      "references": "",
+      "keywords": [],
+      "terms": [],
+      "tags": [],
+      "attribution": "",
+      "sourceText": "",
+      "territories": [],
+      "related": [],
+      "x": 395,
+      "y": 634,
+      "weight": 1,
+      "manualPosition": true
+    },
+    {
+      "id": "new-question-17",
+      "label": "",
+      "text": "Can transformation be quiet and still be radical?",
+      "subtitle": "",
+      "shortDescription": "",
+      "description": "",
+      "longDescription": "",
+      "references": "",
+      "keywords": [],
+      "terms": [],
+      "tags": [],
+      "attribution": "",
+      "sourceText": "",
+      "territories": [],
+      "related": [],
+      "x": 400,
+      "y": 840,
+      "weight": 1,
+      "manualPosition": true
+    },
+    {
+      "id": "new-question-18",
+      "label": "",
+      "text": "How do we accompany a world in transition?",
+      "subtitle": "",
+      "shortDescription": "",
+      "description": "",
+      "longDescription": "",
+      "references": "",
+      "keywords": [],
+      "terms": [],
+      "tags": [],
+      "attribution": "",
+      "sourceText": "",
+      "territories": [],
+      "related": [],
+      "x": 438,
+      "y": 406,
+      "weight": 1,
+      "manualPosition": true
+    },
+    {
+      "id": "new-question-19",
+      "label": "",
+      "text": "What asks to be accompanied rather than solved?",
+      "subtitle": "",
+      "shortDescription": "",
+      "description": "",
+      "longDescription": "",
+      "references": "",
+      "keywords": [],
+      "terms": [],
+      "tags": [],
+      "attribution": "",
+      "sourceText": "",
+      "territories": [],
+      "related": [],
+      "x": 1005,
+      "y": 201,
+      "weight": 1,
+      "manualPosition": true
     }
   ],
   "fellows": [
